@@ -5,8 +5,8 @@ import storage from 'redux-persist/lib/storage'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import accounts from '../store/accounts'
-import user from '../store/user'
+import accounts from './store/accounts'
+import user from './store/user'
 
 const reducers = {
   user,

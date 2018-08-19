@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import WebFont from 'webfontloader'
 
 import '../../globalStyles'
-import configureStore from '../../config/configureStore'
+import configureStore from '../../configureStore'
 import Router from './Router'
 
 const { store, persistor } = configureStore()
