@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { injectGlobal } from 'emotion'
 
 injectGlobal`
@@ -21,9 +19,3 @@ injectGlobal`
     list-style: none;
   }
 `
-
-export default class GlobalStyles extends React.PureComponent {
-  render() {
-    return this.props.children
-  }
-}
