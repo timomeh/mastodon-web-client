@@ -1,19 +1,20 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
 import WebFont from 'webfontloader'
 
 import '../../globalStyles'
-import configureStore from '../../configureStore'
+import * as mastodonApi from '../../lib/mastodonApi'
+import configureStore from '../../redux/configureStore'
 import Router from './Router'
 
-const { store, persistor } = configureStore()
+const store = configureStore()
+mastodonApi.setStore(store)
 
 export default class App extends React.PureComponent {
   componentDidMount() {
     WebFont.load({
       google: {
-        families: ['Roboto']
+        families: ['Roboto:400,500,700']
       }
     })
   }
@@ -21,9 +22,7 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Router />
-        </PersistGate>
+        <Router />
       </Provider>
     )
   }

@@ -8,16 +8,22 @@
     "test": "react-app-rewired test --env=jsdom"
   },
   "dependencies": {
+    "@manaflair/redux-batch": "^0.1.0",
     "emotion": "^9.2.6",
+    "humps": "^2.0.1",
+    "is-valid-domain": "0.0.5",
     "normalizr": "^3.2.4",
+    "query-string": "^6.1.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-emotion": "^9.2.6",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
+    "redux-persist-crosstab": "github:Vydia/redux-persist-crosstab#v5-compat",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",
     "webfontloader": "^1.6.28"

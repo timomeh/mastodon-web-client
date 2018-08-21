@@ -5,6 +5,10 @@ injectGlobal`
     font-family: 'Roboto', sans-serif;
   }
 
+  html, body, #root {
+    height: 100%;
+  }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }

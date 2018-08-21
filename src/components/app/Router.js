@@ -1,26 +1,31 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import * as user from '../../store/user'
-import WelcomeScreen from '../welcome/WelcomeScreen'
+// import UserRoute from './UserRoute'
+// import UserRoot from '../user/UserRoot'
+import AuthorizedScreen from '../user/AuthorizedScreen'
+import AddFirstUserScreen from '../user/AddFirstUserScreen'
 
-export class Router extends React.PureComponent {
+export default class Router extends React.PureComponent {
   render() {
     return (
       <BrowserRouter>
-        <Route
-          exact
-          path="/"
-          component={this.props.isLoggedIn ? WelcomeScreen : WelcomeScreen}
-        />
+        <React.Fragment>
+          <Switch>
+            <Route
+              path="/authorized/:instanceUri"
+              component={AuthorizedScreen}
+            />
+            <Route path="/start" component={AddFirstUserScreen} />
+            {/* <UserRoute path="/start" component={AddFirstUserScreen} loggedOut />
+            <UserRoute
+              path="/:uacct?"
+              component={UserRoot}
+              redirectTo="/start"
+            /> */}
+          </Switch>
+        </React.Fragment>
       </BrowserRouter>
     )
   }
 }
-
-const mapStateToProps = state => ({
-  isLoggedIn: user.isLoggedIn(state)
-})
-
-export default connect(mapStateToProps)(Router)
