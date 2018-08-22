@@ -11,7 +11,7 @@ const remoteAccount = {
 }
 
 const instance = {
-  instanceUri: 'download.tld'
+  instanceUri: 'funk.town'
 }
 
 describe('getUriFromAccount', () => {
@@ -39,5 +39,12 @@ describe('patchAccount', () => {
   it('adds uacct to the account', () => {
     const patchedAccount = patch.patchAccount(localAccount)
     expect(patchedAccount).toHaveProperty('uacct', 'someone@funk.town')
+  })
+})
+
+describe('patchInstance', () => {
+  it('adds uri to the instance', () => {
+    const patchedInstance = patch.patchInstance(instance)
+    expect(patchedInstance).toHaveProperty('uri', 'funk.town')
   })
 })
