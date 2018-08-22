@@ -20,12 +20,9 @@ export class UserRoot extends React.PureComponent {
 
   fetchBackgroundData = () => {
     if (!this.props.user) return
-    const { uacct, instanceUri } = this.props.user
+    const { uacct, uri } = this.props.user
 
-    Promise.all([
-      this.props.fetchUser(uacct),
-      this.props.fetchInstance(instanceUri)
-    ])
+    Promise.all([this.props.fetchUser(uacct), this.props.fetchInstance(uri)])
   }
 
   render() {
@@ -43,7 +40,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchUser: uacct => dispatch(users.fetchUser(uacct)),
-  fetchInstance: instanceUri => dispatch(instances.fetchInstance(instanceUri))
+  fetchInstance: uri => dispatch(instances.fetchInstance(uri))
 })
 
 export default connect(

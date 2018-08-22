@@ -1,32 +1,43 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import isValidDomain from 'is-valid-domain'
 
+import api from '../../lib/mastodon/api'
 import * as clients from '../../redux/ducks/clients'
 
 export class AddUser extends React.PureComponent {
   state = {
-    instanceUri: '',
+    uri: '',
     loading: false,
     error: false
   }
 
   handleInputChange = event => {
     this.setState({
-      instanceUri: event.target.value,
+      uri: event.target.value,
       error: false
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const instanceUri = this.state.instanceUri || 'mastodon.social'
+
+    const uri = this.state.uri.trim() || 'mastodon.social'
+    if (!isValidDomain(uri)) {
+      this.setState({ error: true })
+      return
+    }
+
     this.setState({ loading: true })
 
-    this.props.createClientAndRedirect(instanceUri).catch(error => {
-      console.error(error)
-      this.setState({ loading: false, error: true })
-    })
+    this.props
+      .createClient(uri)
+      .then(client => api({ uri, client }).user.authorize())
+      .catch(error => {
+        console.error(error)
+        this.setState({ loading: false, error: true })
+      })
   }
 
   render() {
@@ -50,8 +61,7 @@ export class AddUser extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createClientAndRedirect: instanceUri =>
-    dispatch(clients.createAndRedirect(instanceUri))
+  createClient: uri => dispatch(clients.createClient(uri))
 })
 
 export default connect(

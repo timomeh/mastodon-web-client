@@ -3,12 +3,12 @@ import { Provider } from 'react-redux'
 import WebFont from 'webfontloader'
 
 import '../../globalStyles'
-import * as mastodonApi from '../../lib/mastodonApi'
+import { setStore as setMastodonApiStore } from '../../lib/mastodon/api'
 import configureStore from '../../redux/configureStore'
 import Router from './Router'
 
 const store = configureStore()
-mastodonApi.setStore(store)
+setMastodonApiStore(store)
 
 export default class App extends React.PureComponent {
   componentDidMount() {

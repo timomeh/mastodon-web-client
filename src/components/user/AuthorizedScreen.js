@@ -14,10 +14,10 @@ export class AuthorizedScreen extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { instanceUri } = this.props.match.params
+    const { uri } = this.props.match.params
     const { code } = queryString.parse(this.props.location.search)
 
-    this.props.fetchUserFromCode({ instanceUri, code })
+    this.props.fetchUserFromCode({ uri, code })
   }
 
   render() {
@@ -29,8 +29,8 @@ export class AuthorizedScreen extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserFromCode: ({ instanceUri, code }) =>
-    dispatch(users.fetchUserFromCode({ instanceUri, code }))
+  fetchUserFromCode: ({ uri, code }) =>
+    dispatch(users.fetchUserFromCode({ uri, code }))
 })
 
 export default connect(

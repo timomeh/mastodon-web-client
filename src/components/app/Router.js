@@ -12,10 +12,7 @@ export default class Router extends React.PureComponent {
       <BrowserRouter>
         <React.Fragment>
           <Switch>
-            <Route
-              path="/authorized/:instanceUri"
-              component={AuthorizedScreen}
-            />
+            <Route path="/authorized/:uri" component={AuthorizedScreen} />
             <Route path="/start" component={AddFirstUserScreen} />
             {/* <UserRoute path="/start" component={AddFirstUserScreen} loggedOut />
             <UserRoute

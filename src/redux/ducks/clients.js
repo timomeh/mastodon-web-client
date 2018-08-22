@@ -1,6 +1,6 @@
-import api from '../../lib/mastodonApi'
+import api from '../../lib/mastodon/api'
 import * as app from './app'
-import * as select from '../selectors'
+import { getClients } from '../selectors'
 
 const initialState = {}
 
@@ -17,20 +17,14 @@ export default function clientsReducer(state = initialState, action) {
   }
 }
 
-export const createClient = instanceUri => (dispatch, getState) => {
-  const existingClient = select.getClients(getState())[instanceUri]
-  if (existingClient) return Promise.resolve(existingClient)
+export const createClient = uri => (dispatch, getState) => {
+  const existing = getClients(getState())[uri]
+  if (existing) return Promise.resolve(existing)
 
-  return api(instanceUri)
+  return api({ uri })
     .apps.create()
     .then(({ result, entities }) => {
-      dispatch([app.addEntities(entities), app.setActiveInstanceUri(result)])
-      return result
+      dispatch([app.addEntities(entities), app.setActiveUri(result)])
+      return entities[result]
     })
-}
-
-export const createAndRedirect = instanceUri => dispatch => {
-  return dispatch(createClient(instanceUri)).then(() =>
-    api(instanceUri).oauth.authorize()
-  )
 }

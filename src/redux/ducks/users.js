@@ -1,6 +1,5 @@
-import api from '../../lib/mastodonApi'
+import api from '../../lib/mastodon/api'
 import * as app from './app'
-import * as users from './users'
 
 const SET_TOKEN = 'users/SET_TOKEN'
 const ADD_USER = 'users/ADD_USER'
@@ -44,14 +43,11 @@ export const setToken = (uacct, token) => ({
   token
 })
 
-export const fetchUserFromCode = ({ instanceUri, code }) => dispatch => {
-  return api(instanceUri)
-    .oauth.token(code)
+export const fetchUserFromCode = ({ uri, code }) => dispatch => {
+  return api({ uri })
+    .user.token(code)
     .then(({ accessToken: token }) => {
-      return Promise.all([
-        token,
-        dispatch(fetchByToken({ instanceUri, token }))
-      ])
+      return Promise.all([token, dispatch(fetchByToken({ uri, token }))])
     })
     .then(([token, user]) => {
       dispatch(setToken(user.uacct, token))
@@ -59,9 +55,9 @@ export const fetchUserFromCode = ({ instanceUri, code }) => dispatch => {
     })
 }
 
-export const fetchByToken = ({ instanceUri, token }) => dispatch => {
-  return api(instanceUri)
-    .accounts.verifyCredentials(token)
+export const fetchByToken = ({ uri, token }) => dispatch => {
+  return api({ uri, token })
+    .user.get()
     .then(({ result, entities }) => {
       dispatch([
         addUser(result),

@@ -22,7 +22,7 @@ const reducers = {
 
 const persistedReducers = ['users', 'clients']
 
-export default function configureStore() {
+export default function configureStore(initialState) {
   const middleware = [thunk]
   if (process.env.NODE_ENV === 'development') middleware.push(logger)
 
@@ -33,9 +33,9 @@ export default function configureStore() {
     reduxBatch
   )
 
-  const initialState = loadState()
+  const preloadedState = initialState || loadState()
 
-  const store = createStore(rootReducer, initialState, enhancer)
+  const store = createStore(rootReducer, preloadedState, enhancer)
   persistState(store, { reducers: persistedReducers })
 
   return store
