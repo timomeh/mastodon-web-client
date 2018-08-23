@@ -14,7 +14,3 @@ export function patchAccount(account) {
 
   return { ...account, uri, uacct }
 }
-
-export function patchInstance(instance) {
-  return { ...instance, uri: instance.instanceUri }
-}

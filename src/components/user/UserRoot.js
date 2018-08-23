@@ -3,44 +3,60 @@ import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import * as users from '../../store/users'
-import * as instances from '../../store/instances'
+import * as app from '../../redux/ducks/app'
+
+import UserDataLayer from './UserDataLayer'
+import UserRoutes from './UserRoutes'
 
 export class UserRoot extends React.PureComponent {
   static propTypes = {
-    fetchUser: PropTypes.func.isRequired,
-    fetchInstance: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
-    user: PropTypes.object
+    user: PropTypes.object,
+    hasPrepared: PropTypes.bool.isRequired,
+    setActiveUserAndUri: PropTypes.func.isRequired
   }
 
   componentDidMount() {
-    this.fetchBackgroundData()
-  }
-
-  fetchBackgroundData = () => {
-    if (!this.props.user) return
-    const { uacct, uri } = this.props.user
-
-    Promise.all([this.props.fetchUser(uacct), this.props.fetchInstance(uri)])
+    console.log(this.props.match)
+    if (this.props.user) {
+      const { uacct, uri } = this.props.user
+      this.props.setActiveUserAndUri({ uacct, uri })
+    }
   }
 
   render() {
     if (!this.props.user) {
-      return <Redirect to="/" />
+      return <div>Don't know that user</div>
     }
 
-    return <div>{this.props.user.uacct}</div>
+    if (!this.props.hasPrepared) return null
+
+    const { url } = this.props.match
+    const { uri, uacct } = this.props.user
+
+    return (
+      <UserDataLayer uri={uri} uacct={uacct}>
+        {hasData => (hasData ? <UserRoutes baseUrl={url} /> : 'Loading...')}
+      </UserDataLayer>
+    )
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  user: users.getCurrentUser(state, ownProps.match.params.uacct)
-})
+const mapStateToProps = (state, ownProps) => {
+  const { uacct: setUacct } = ownProps.match.params
+  const defaultUacct = state.users.uaccts[0]
+  const uacct = setUacct || defaultUacct
+
+  return {
+    user: state.users.entities[uacct],
+    hasPrepared: state.app.uacct === uacct
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
-  fetchUser: uacct => dispatch(users.fetchUser(uacct)),
-  fetchInstance: uri => dispatch(instances.fetchInstance(uri))
+  setActiveUserAndUri: ({ uacct, uri }) => {
+    return dispatch([app.setActiveUri(uri), app.setActiveUacct(uacct)])
+  }
 })
 
 export default connect(

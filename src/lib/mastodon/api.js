@@ -54,16 +54,13 @@ export default function mastodonApi(overrides = {}) {
       },
 
       get() {
-        return call('/api/v1/accounts/verify_credentials', { token })
-          .then(account => normalize(account, schema.account))
-          .then(acc => {
-            console.log(acc)
-            return acc
-          })
+        return call('/api/v1/accounts/verify_credentials', { token }).then(
+          account => normalize(account, schema.account)
+        )
       }
     },
 
-    instances: {
+    instance: {
       get() {
         return call('/api/v1/instance').then(instance =>
           normalize(instance, schema.instance)

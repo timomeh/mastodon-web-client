@@ -1,5 +1,3 @@
-import * as select from '../../redux/selectors'
-
 export default function getCredentials(store, overrides = {}) {
   const state = store.getState()
   const uri = overrides.uri || getUri(state)
@@ -10,13 +8,13 @@ export default function getCredentials(store, overrides = {}) {
 }
 
 function getUri(state) {
-  return select.getAppUri(state)
+  return state.app.uri
 }
 
 function getToken(state) {
-  return select.getUsersTokensCurrent(state)
+  return state.users.tokens[state.app.uacct]
 }
 
 function getClient(state, uri) {
-  return uri ? select.getClients(state)[uri] : select.getClientsCurrent(state)
+  return uri ? state.clients[uri] : state.clients[state.app.uri]
 }

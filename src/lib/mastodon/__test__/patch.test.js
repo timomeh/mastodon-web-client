@@ -41,10 +41,3 @@ describe('patchAccount', () => {
     expect(patchedAccount).toHaveProperty('uacct', 'someone@funk.town')
   })
 })
-
-describe('patchInstance', () => {
-  it('adds uri to the instance', () => {
-    const patchedInstance = patch.patchInstance(instance)
-    expect(patchedInstance).toHaveProperty('uri', 'funk.town')
-  })
-})

@@ -17,7 +17,10 @@ export class AuthorizedScreen extends React.PureComponent {
     const { uri } = this.props.match.params
     const { code } = queryString.parse(this.props.location.search)
 
-    this.props.fetchUserFromCode({ uri, code })
+    this.props
+      .fetchUserFromCode({ uri, code })
+      .then(() => this.setState({ isLoading: false, isSuccess: true }))
+      .catch(err => this.setState({ isLoading: false, error: 'Error!' }))
   }
 
   render() {

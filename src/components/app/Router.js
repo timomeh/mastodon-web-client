@@ -1,10 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-// import UserRoute from './UserRoute'
-// import UserRoot from '../user/UserRoot'
-import AuthorizedScreen from '../user/AuthorizedScreen'
-import AddFirstUserScreen from '../user/AddFirstUserScreen'
+import AuthRoute from './AuthRoute'
+import StartScreen from './StartScreen'
+import AuthorizedScreen from '../auth/AuthorizedScreen'
+import UserRoot from '../user/UserRoot'
 
 export default class Router extends React.PureComponent {
   render() {
@@ -13,13 +13,15 @@ export default class Router extends React.PureComponent {
         <React.Fragment>
           <Switch>
             <Route path="/authorized/:uri" component={AuthorizedScreen} />
-            <Route path="/start" component={AddFirstUserScreen} />
-            {/* <UserRoute path="/start" component={AddFirstUserScreen} loggedOut />
-            <UserRoute
-              path="/:uacct?"
-              component={UserRoot}
-              redirectTo="/start"
-            /> */}
+            <AuthRoute
+              path="/:uacct(.*@[^\/]+)"
+              component={hasUser => (hasUser ? UserRoot : StartScreen)}
+            />
+            <AuthRoute
+              exact
+              path="/"
+              component={hasUser => (hasUser ? UserRoot : StartScreen)}
+            />
           </Switch>
         </React.Fragment>
       </BrowserRouter>

@@ -5,6 +5,7 @@ import WebFont from 'webfontloader'
 import '../../globalStyles'
 import { setStore as setMastodonApiStore } from '../../lib/mastodon/api'
 import configureStore from '../../redux/configureStore'
+
 import Router from './Router'
 
 const store = configureStore()

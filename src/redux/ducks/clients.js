@@ -1,6 +1,5 @@
 import api from '../../lib/mastodon/api'
 import * as app from './app'
-import { getClients } from '../selectors'
 
 const initialState = {}
 
@@ -18,7 +17,7 @@ export default function clientsReducer(state = initialState, action) {
 }
 
 export const createClient = uri => (dispatch, getState) => {
-  const existing = getClients(getState())[uri]
+  const existing = getState().clients[uri]
   if (existing) return Promise.resolve(existing)
 
   return api({ uri })
