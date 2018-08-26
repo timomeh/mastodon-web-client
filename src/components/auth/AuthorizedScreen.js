@@ -1,12 +1,19 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { compose, withProps } from 'recompose'
 import PropTypes from 'prop-types'
 import querystring from 'querystring'
 
 import * as users from '../../redux/ducks/users'
 
 export class AuthorizedScreen extends React.PureComponent {
+  static propTypes = {
+    fetchUserFromCode: PropTypes.func.isRequired,
+    code: PropTypes.string.isRequired,
+    uri: PropTypes.string.isRequired
+  }
+
   state = {
     isLoading: true,
     isSuccess: false,
@@ -14,8 +21,7 @@ export class AuthorizedScreen extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { uri } = this.props.match.params
-    const { code } = querystring.parse(this.props.location.search)
+    const { uri, code } = this.props
 
     this.props
       .fetchUserFromCode({ uri, code })
@@ -36,7 +42,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(users.fetchUserFromCode({ uri, code }))
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
+export default compose(
+  withProps(props => ({
+    uri: this.props.match.params.uri,
+    code: querystring.parse(this.props.location.search).code
+  })),
+  connect(
+    null,
+    mapDispatchToProps
+  )
 )(AuthorizedScreen)

@@ -10,10 +10,6 @@ const remoteAccount = {
   acct: 'someone@up.town'
 }
 
-const instance = {
-  instanceUri: 'funk.town'
-}
-
 describe('getUriFromAccount', () => {
   it('returns the uri of an account', () => {
     expect(patch.getUriFromAccount(localAccount)).toBe('funk.town')
