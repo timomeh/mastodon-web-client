@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr'
+import querystring from 'querystring'
 
 import fetchFactory from './fetch-factory'
 import * as schema from './schema'
@@ -32,13 +33,13 @@ export default function mastodonApi(overrides = {}) {
 
     user: {
       authorize() {
-        const params = [
-          ['client_id', client.clientId],
-          ['scope', 'read%20write%20follow'],
-          ['response_type', 'code'],
-          ['redirect_uri', redirectUri]
-        ]
-        const qs = params.map(keyValue => keyValue.join('=')).join('&')
+        const query = {
+          client_id: client.clientId,
+          scope: 'read write follow',
+          response_type: 'code',
+          redirect_uri: redirectUri
+        }
+        const qs = querystring.stringify(query)
 
         window.location.assign(`https://${uri}/oauth/authorize?${qs}`)
       },

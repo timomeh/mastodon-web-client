@@ -76,7 +76,9 @@ describe('with a successful response', () => {
     await wait()
     const redirectUrl = window.location.assign.mock.calls[0][0]
     expect(redirectUrl).toMatch(/^https:\/\/funk.town\/oauth\/authorize/)
-    expect(redirectUrl).toMatch(/https:\/\/fake.host\/authorized\/funk.town$/)
+    expect(redirectUrl).toMatch(
+      /https%3A%2F%2Ffake.host%2Fauthorized%2Ffunk.town$/
+    )
     expect(redirectUrl).toContain('client_id=abc')
     expect(redirectUrl).toContain('scope=read%20write%20follow')
     expect(redirectUrl).toContain('response_type=code')

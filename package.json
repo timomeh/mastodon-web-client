@@ -14,7 +14,7 @@
     "humps": "^2.0.1",
     "is-valid-domain": "0.0.5",
     "normalizr": "^3.2.4",
-    "query-string": "^6.1.0",
+    "querystring": "^0.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-emotion": "^9.2.6",

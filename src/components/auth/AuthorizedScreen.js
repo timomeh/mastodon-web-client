@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import queryString from 'query-string'
+import querystring from 'querystring'
 
 import * as users from '../../redux/ducks/users'
 
@@ -15,7 +15,7 @@ export class AuthorizedScreen extends React.PureComponent {
 
   componentDidMount() {
     const { uri } = this.props.match.params
-    const { code } = queryString.parse(this.props.location.search)
+    const { code } = querystring.parse(this.props.location.search)
 
     this.props
       .fetchUserFromCode({ uri, code })
