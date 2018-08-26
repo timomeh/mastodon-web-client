@@ -13,6 +13,10 @@ const initialState = {
   clients: { 'funk.town': { clientId: 'abc', clientSecret: '123' } }
 }
 
+// We are testing some api requests and responses in here pretty hard. This
+// isn't really a user-facing interaction, but since we're mocking requests,
+// we need to be sure that the auth-flow get's executed correctly.
+
 describe('with a successful response', () => {
   beforeEach(() => {
     call

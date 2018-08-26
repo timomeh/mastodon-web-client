@@ -5,7 +5,7 @@ import IndexRoute from './IndexRoute'
 import NotFound from './NotFound'
 import AuthorizedScreen from '../auth/AuthorizedScreen'
 
-export default class Router extends React.PureComponent {
+export default class Router extends React.Component {
   render() {
     return (
       <Switch>
