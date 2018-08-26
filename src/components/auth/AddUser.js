@@ -66,11 +66,7 @@ export class AddUser extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = {
-  createClient: clients.createClient
-}
-
 export default connect(
   null,
-  mapDispatchToProps
+  { createClient: clients.createClient }
 )(AddUser)
