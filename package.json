@@ -1,7 +1,8 @@
 {
-  "name": "toot.one",
+  "name": "mastodon-web-client",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
