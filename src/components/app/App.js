@@ -1,10 +1,11 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import WebFont from 'webfontloader'
 
-import '../../globalStyles'
+import '../../global-styles'
 import { setStore as setMastodonApiStore } from '../../lib/mastodon/api'
-import configureStore from '../../redux/configureStore'
+import configureStore from '../../redux/configure-store'
 
 import Router from './Router'
 
@@ -23,7 +24,9 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <Router />
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </Provider>
     )
   }

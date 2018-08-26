@@ -7,6 +7,10 @@ import api from '../../lib/mastodon/api'
 import * as clients from '../../redux/ducks/clients'
 
 export class AddUser extends React.PureComponent {
+  static propTypes = {
+    createClient: PropTypes.func.isRequired
+  }
+
   state = {
     uri: '',
     loading: false,
@@ -35,7 +39,6 @@ export class AddUser extends React.PureComponent {
       .createClient(uri)
       .then(client => api({ uri, client }).user.authorize())
       .catch(error => {
-        console.error(error)
         this.setState({ loading: false, error: true })
       })
   }
@@ -44,25 +47,28 @@ export class AddUser extends React.PureComponent {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label>Your Instance</label>
+          <label htmlFor="uri">Your Instance</label>
           <input
+            data-testid="add-uri-input"
             disabled={this.state.loading}
             value={this.state.instance}
             onChange={this.handleInputChange}
             placeholder="e.g. mastodon.social"
           />
           <div>We will use mastodon.social if you leave this blank.</div>
-          <button disabled={this.state.loading}>Log in</button>
+          <button disabled={this.state.loading} data-testid="add-uri-button">
+            Log in
+          </button>
         </form>
-        {this.state.error && <div>Error!</div>}
+        {this.state.error && <div data-testid="input-error">Error!</div>}
       </div>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  createClient: uri => dispatch(clients.createClient(uri))
-})
+const mapDispatchToProps = {
+  createClient: clients.createClient
+}
 
 export default connect(
   null,

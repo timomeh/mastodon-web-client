@@ -4,7 +4,7 @@ import { reduxBatch } from '@manaflair/redux-batch'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import { loadState, persistState } from './persistState'
+import { loadState, persistState } from './persist-state'
 
 import app from './ducks/app'
 import accounts from './ducks/accounts'

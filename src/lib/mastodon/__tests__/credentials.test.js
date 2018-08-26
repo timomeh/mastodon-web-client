@@ -1,5 +1,5 @@
 import getCredentials from '../credentials'
-import configureStore from '../../../redux/configureStore'
+import configureStore from '../../../redux/configure-store'
 
 const initialState = {
   app: { uri: 'funk.town', uacct: 'someone@funk.town' },

@@ -1,6 +1,6 @@
 import { normalize } from 'normalizr'
 
-import fetchFactory from './fetchFactory'
+import fetchFactory from './fetch-factory'
 import * as schema from './schema'
 import getCredentials from './credentials'
 
@@ -40,7 +40,7 @@ export default function mastodonApi(overrides = {}) {
         ]
         const qs = params.map(keyValue => keyValue.join('=')).join('&')
 
-        window.location = `https://${uri}/oauth/authorize?${qs}`
+        window.location.assign(`https://${uri}/oauth/authorize?${qs}`)
       },
 
       token(code) {

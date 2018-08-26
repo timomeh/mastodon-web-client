@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "react-app",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
+  "globals": {
+    "render": true,
+    "renderWithRedux": true,
+    "renderWithRouter": true,
+    "renderWithReduxAndRouter": true,
+    "fireEvent": true,
+    "wait": true,
+    "waitForElement": true
+  }
+}

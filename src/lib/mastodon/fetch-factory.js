@@ -1,7 +1,7 @@
-import { ApiError } from '../errors'
 import humps from 'humps'
+import { ApiError } from '../errors'
 
-export default function apiFetch(uri) {
+export default function fetchFactory(uri) {
   return (path, { body, token, method = 'GET' } = {}) => {
     const headers = new Headers()
     headers.set('Accept', 'application/json')
