@@ -6,7 +6,12 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-    "lint": "eslint ."
+    "test:ci": "react-app-rewired test --env=jsdom --runInBand --reporters=default --reporters=jest-junit",
+    "lint": "eslint .",
+    "lint:ci": "eslint -f junit -o reports/eslint/results.xml .",
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "analyze:ci": "mkdir -p analyze && source-map-explorer --html build/static/js/*  > analyze/source-map-explorer.html",
+    "bundlesize": "bundlesize"
   },
   "dependencies": {
     "@manaflair/redux-batch": "^0.1.0",
@@ -35,9 +40,16 @@
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-react": "^7.11.1",
     "jest-dom": "^1.12.0",
+    "jest-junit": "^5.1.0",
     "prettier": "^1.14.2",
     "react-app-rewired": "^1.5.2",
     "react-testing-library": "^5.0.0",
-    "redux-devtools-extension": "^2.13.5"
-  }
+    "redux-devtools-extension": "^2.13.5",
+    "source-map-explorer": "^1.6.0"
+  },
+  "bundlesize": [
+    {
+      "path": "./build/static/js/*.js"
+    }
+  ]
 }
