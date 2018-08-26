@@ -6,9 +6,11 @@ import PropTypes from 'prop-types'
 import querystring from 'querystring'
 
 import * as users from '../../redux/ducks/users'
+import * as app from '../../redux/ducks/app'
 
 export class AuthorizedScreen extends React.PureComponent {
   static propTypes = {
+    setActiveUacct: PropTypes.func.isRequired,
     fetchUserFromCode: PropTypes.func.isRequired,
     code: PropTypes.string.isRequired,
     uri: PropTypes.string.isRequired
@@ -25,6 +27,7 @@ export class AuthorizedScreen extends React.PureComponent {
 
     this.props
       .fetchUserFromCode({ uri, code })
+      .then(user => this.props.setActiveUacct(user.uacct))
       .then(() => this.setState({ isLoading: false, isSuccess: true }))
       .catch(err => this.setState({ isLoading: false, error: 'Error!' }))
   }
@@ -37,18 +40,16 @@ export class AuthorizedScreen extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchUserFromCode: ({ uri, code }) =>
-    dispatch(users.fetchUserFromCode({ uri, code }))
-})
-
 export default compose(
   withProps(props => ({
-    uri: this.props.match.params.uri,
-    code: querystring.parse(this.props.location.search).code
+    uri: props.match.params.uri,
+    code: querystring.parse(props.location.search.replace(/^\?/, '')).code
   })),
   connect(
     null,
-    mapDispatchToProps
+    {
+      fetchUserFromCode: users.fetchUserFromCode,
+      setActiveUacct: app.setActiveUacct
+    }
   )
 )(AuthorizedScreen)
