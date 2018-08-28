@@ -11,7 +11,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
           paths:
@@ -32,7 +32,7 @@ jobs:
       - store_test_results:
           path: reports
 
-  jest:
+  test:
     <<: *defaults
     steps:
       - checkout
@@ -41,7 +41,7 @@ jobs:
       - run:
           command: npm run test:ci
           environment:
-            JEST_JUNIT_OUTPUT: "reports/jest/results.xml"
+            JEST_JUNIT_OUTPUT: 'reports/test/results.xml'
       - store_test_results:
           path: reports
 
@@ -82,7 +82,7 @@ workflows:
       - build:
           requires:
             - prepare
-      - jest:
+      - test:
           requires:
             - prepare
       - analyze:
