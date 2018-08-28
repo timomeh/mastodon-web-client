@@ -4,7 +4,6 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "precommit": "lint-staged",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
@@ -42,10 +41,11 @@
     "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-react": "^7.11.1",
-    "husky": "^0.14.3",
+    "husky": "next",
     "jest-dom": "^1.12.0",
     "jest-fetch-mock": "^1.6.5",
     "jest-junit": "^5.1.0",
+    "lint-staged": "^7.2.2",
     "prettier": "^1.14.2",
     "react-app-rewired": "^1.5.2",
     "react-testing-library": "^5.0.0",
@@ -56,5 +56,10 @@
     {
       "path": "./build/static/js/*.js"
     }
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }
