@@ -3,198 +3,155 @@ import { fireEvent, wait } from 'react-testing-library'
 import { renderWithRedux } from '../../../lib/testing-utils'
 
 import AddUser from '../AddUser'
-import fetch, { call } from '../../../lib/mastodon/fetch-factory'
 
 describe('with a successful response', () => {
   beforeEach(() => {
-    call.mockImplementationOnce(() =>
-      Promise.resolve({
-        clientId: 'abc',
-        clientSecret: '123'
-      })
-    )
+    fetch.once(JSON.stringify({ client_id: 'funky', client_secret: 'psst' }))
   })
 
   it('sets the input to disabled', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
-    const input = getByTestId('add-uri-input')
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    expect(input.disabled).toBe(false)
-
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'funk.town' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
+    fireEvent.change(input, { target: { value: 'funk.town' } })
+    fireEvent.click(button)
 
     expect(input.disabled).toBe(true)
   })
 
   it('sets the button to disabled', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
-    const button = getByTestId('add-uri-button')
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    expect(button.disabled).toBe(false)
-
-    fireEvent.change(getByTestId('add-uri-button'), {
-      target: { value: 'funk.town' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
+    fireEvent.change(input, { target: { value: 'funk.town' } })
+    fireEvent.click(button)
 
     expect(button.disabled).toBe(true)
   })
 
-  it('creates a new client', async () => {
-    const { getByTestId, store } = renderWithRedux(<AddUser />)
+  it('redirects to the correct authorization page', async () => {
+    const location = (window.location.assign = jest.fn())
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'funk.town' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
-
+    fireEvent.change(input, { target: { value: 'funk.town' } })
+    fireEvent.click(button)
     await wait()
-    expect(fetch).toHaveBeenCalledWith('funk.town')
-    expect(store.getState()).toMatchObject({
-      clients: {
-        'funk.town': {
-          clientId: 'abc',
-          clientSecret: '123'
-        }
-      }
-    })
-  })
 
-  it('redirects to the authorization page', async () => {
-    window.location.assign = jest.fn()
-
-    const { getByTestId } = renderWithRedux(<AddUser />)
-
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'funk.town' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
-
-    await wait()
-    const redirectUrl = window.location.assign.mock.calls[0][0]
-    expect(redirectUrl).toMatch(/^https:\/\/funk.town\/oauth\/authorize/)
-    expect(redirectUrl).toMatch(
-      /https%3A%2F%2Ffake.host%2Fauthorized%2Ffunk.town$/
+    expect(location).toHaveBeenCalledWith(
+      expect.stringMatching(/^https:\/\/funk.town/)
     )
-    expect(redirectUrl).toContain('client_id=abc')
-    expect(redirectUrl).toContain('scope=read%20write%20follow')
-    expect(redirectUrl).toContain('response_type=code')
+    expect(location).toHaveBeenCalledWith(
+      expect.stringContaining('client_id=funky')
+    )
+    expect(location).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'redirect_uri=https%3A%2F%2Ffake.host%2Fauthorized%2Ffunk.town'
+      )
+    )
   })
 
   it('defaults to mastodon.social', async () => {
-    const { getByTestId, store } = renderWithRedux(<AddUser />)
+    const location = (window.location.assign = jest.fn())
+    const { getByText } = renderWithRedux(<AddUser />)
+    const button = getByText('Login')
 
-    fireEvent.click(getByTestId('add-uri-button'))
-
+    fireEvent.click(button)
     await wait()
-    expect(fetch).toHaveBeenCalledWith('mastodon.social')
-    expect(store.getState()).toMatchObject({
-      app: { uri: 'mastodon.social' }
+
+    expect(location).toHaveBeenCalledWith(
+      expect.stringMatching(/^https:\/\/mastodon.social/)
+    )
+  })
+
+  it('does not create a new client if one is already stored', async () => {
+    const location = (window.location.assign = jest.fn())
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />, {
+      initialState: {
+        clients: { 'funk.town': { clientId: 'earth', clientSecret: 'wind' } }
+      }
     })
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
+
+    fireEvent.change(input, { target: { value: 'funk.town' } })
+    fireEvent.click(button)
+    await wait()
+
+    expect(fetch).not.toHaveBeenCalled()
+    expect(location).toHaveBeenCalled()
   })
 })
 
 describe('with an invalid uri', () => {
   it('shows an error', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'invalid/host' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
+    fireEvent.change(input, { target: { value: 'funk/not@town' } })
+    fireEvent.click(button)
 
-    expect(getByTestId('input-error')).toBeInTheDocument()
+    expect(getByText(/Error/)).toBeInTheDocument()
   })
 
   it('removes the error if url was changes', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'invalid/host' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
-    const error = getByTestId('input-error')
-    expect(error).toBeInTheDocument()
+    fireEvent.change(input, { target: { value: 'funk/not@town' } })
+    fireEvent.click(button)
+    const error = getByText(/Error/)
+    fireEvent.change(input, { target: { value: 'funk.town' } })
 
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'valid.host' }
-    })
     expect(error).not.toBeInTheDocument()
   })
 })
 
 describe('with a failed request', () => {
   beforeEach(() => {
-    call.mockImplementationOnce(() => Promise.reject())
+    fetch.mockRejectOnce(
+      JSON.stringify({ error_code: 'SAD', error_description: 'bad error' })
+    )
   })
 
   it('shows an error', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.click(getByTestId('add-uri-button'))
+    fireEvent.change(input, { target: { value: 'funk/not@town' } })
+    fireEvent.click(button)
     await wait()
-    expect(getByTestId('input-error')).toBeInTheDocument()
+
+    expect(getByText(/Error/)).toBeInTheDocument()
   })
 
   it('resets the input to not-disabled', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
-    const input = getByTestId('add-uri-input')
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.click(getByTestId('add-uri-button'))
-    expect(input.disabled).toBe(true)
-
+    fireEvent.change(input, { target: { value: 'funk/not@town' } })
+    fireEvent.click(button)
     await wait()
+
     expect(input.disabled).toBe(false)
   })
 
   it('resets the button to not-disabled', async () => {
-    const { getByTestId } = renderWithRedux(<AddUser />)
-    const button = getByTestId('add-uri-button')
+    const { getByLabelText, getByText } = renderWithRedux(<AddUser />)
+    const input = getByLabelText(/your instance/i)
+    const button = getByText('Login')
 
-    fireEvent.click(getByTestId('add-uri-button'))
-    expect(button.disabled).toBe(true)
-
+    fireEvent.change(input, { target: { value: 'funk/not@town' } })
+    fireEvent.click(button)
     await wait()
+
     expect(button.disabled).toBe(false)
-  })
-})
-
-describe('with a matching client already in store', () => {
-  beforeEach(() => {
-    call.mockImplementationOnce(() =>
-      Promise.resolve({
-        clientId: 'abc',
-        clientSecret: '123'
-      })
-    )
-  })
-
-  it('does not create a new client', async () => {
-    const { getByTestId, store } = renderWithRedux(<AddUser />, {
-      initialState: {
-        clients: { 'funk.town': { clientId: 'def', clientSecret: '456' } }
-      }
-    })
-
-    fireEvent.change(getByTestId('add-uri-input'), {
-      target: { value: 'funk.town' }
-    })
-    fireEvent.click(getByTestId('add-uri-button'))
-
-    await wait()
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(call).not.toHaveBeenCalled()
-
-    expect(store.getState()).toMatchObject({
-      clients: {
-        'funk.town': {
-          clientId: 'def',
-          clientSecret: '456'
-        }
-      }
-    })
   })
 })

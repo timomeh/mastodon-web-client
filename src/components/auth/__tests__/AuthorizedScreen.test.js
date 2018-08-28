@@ -3,80 +3,65 @@ import { wait } from 'react-testing-library'
 import { renderWithReduxAndRouter } from '../../../lib/testing-utils'
 
 import AuthorizedScreen from '../AuthorizedScreen'
-import fetch, { call } from '../../../lib/mastodon/fetch-factory'
 
 const props = {
-  location: { search: '?code=secretcode' },
+  location: { search: '?code=snazzy_code' },
   match: { params: { uri: 'funk.town' } }
 }
 const initialState = {
-  clients: { 'funk.town': { clientId: 'abc', clientSecret: '123' } }
+  clients: {
+    'funk.town': { clientId: 'funky', clientSecret: 'psst' }
+  }
 }
-
-// We are testing some api requests and responses in here pretty hard. This
-// isn't really a user-facing interaction, but since we're mocking requests,
-// we need to be sure that the auth-flow get's executed correctly.
 
 describe('with a successful response', () => {
   beforeEach(() => {
-    call
-      .mockImplementationOnce(() => Promise.resolve({ accessToken: 'secret' }))
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          acct: 'me',
-          url: 'https://funk.town/@me'
-        })
-      )
+    fetch
+      .once(JSON.stringify({ accessToken: 'cryptic' }))
+      .once(JSON.stringify({ acct: 'me', url: 'https://funk.town/@me' }))
   })
 
   it('fetches the access token', async () => {
+    renderWithReduxAndRouter(<AuthorizedScreen {...props} />, { initialState })
+
+    await wait()
+    const body = JSON.parse(fetch.mock.calls[0][1].body)
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://funk.town/oauth/token',
+      expect.objectContaining({ method: 'POST' })
+    )
+    expect(body).toMatchObject({
+      client_id: 'funky',
+      client_secret: 'psst',
+      code: 'snazzy_code'
+    })
+  })
+
+  it('fetches and stores the current user', async () => {
     const { store } = renderWithReduxAndRouter(
       <AuthorizedScreen {...props} />,
       { initialState }
     )
 
     await wait()
-    expect(fetch).toHaveBeenCalledWith('funk.town')
-    expect(call).toHaveBeenCalledWith(
-      '/oauth/token',
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://funk.town/api/v1/accounts/verify_credentials',
       expect.objectContaining({
-        body: expect.objectContaining({
-          code: 'secretcode',
-          clientId: 'abc',
-          clientSecret: '123'
-        })
+        method: 'GET',
+        headers: {
+          map: expect.objectContaining({ authorization: 'Bearer cryptic' })
+        }
       })
     )
     expect(store.getState()).toMatchObject({
-      users: { tokens: { 'me@funk.town': 'secret' } }
+      users: {
+        uaccts: ['me@funk.town'],
+        tokens: { 'me@funk.town': 'cryptic' },
+        entities: { 'me@funk.town': {} }
+      }
     })
-  })
-
-  it('fetches the user', async () => {
-    const { store } = renderWithReduxAndRouter(
-      <AuthorizedScreen {...props} />,
-      { initialState }
-    )
-
-    await wait()
-    expect(fetch).toHaveBeenCalledWith('funk.town')
-    expect(call).toHaveBeenCalledWith('/api/v1/accounts/verify_credentials', {
-      token: 'secret'
-    })
-    expect(store.getState()).toMatchObject({
-      users: { entities: { 'me@funk.town': {} } },
-      app: { uacct: 'me@funk.town' }
-    })
-  })
-
-  it('redirects to the user root', async () => {
-    const { history } = renderWithReduxAndRouter(
-      <AuthorizedScreen {...props} />,
-      { route: '/authorized/funk.town?code=secretcode', initialState }
-    )
-
-    await wait()
-    expect(history.location.pathname).toBe('/')
   })
 
   it('displays a Loading message', async () => {
@@ -87,14 +72,26 @@ describe('with a successful response', () => {
     const loading = getByText(/Loading/)
 
     expect(loading).toBeInTheDocument()
+    await wait() // flushes pending promises which will cause an error
+  })
+
+  it('redirects to root', async () => {
+    const { history } = renderWithReduxAndRouter(
+      <AuthorizedScreen {...props} />,
+      { initialState }
+    )
+    const redirect = jest.spyOn(history, 'replace')
     await wait()
-    expect(loading).not.toBeInTheDocument()
+
+    expect(redirect).toHaveBeenCalledWith('/')
   })
 })
 
 describe('with a failed response', () => {
   beforeEach(() => {
-    call.mockImplementationOnce(() => Promise.reject())
+    fetch.mockRejectOnce(
+      JSON.stringify({ error_code: 'SAD', error_description: 'bad error' })
+    )
   })
 
   it('shows an error', async () => {
@@ -103,7 +100,6 @@ describe('with a failed response', () => {
       { initialState }
     )
 
-    expect(getByText(/Loading/)).toBeInTheDocument()
     await wait()
     expect(getByText(/Error/)).toBeInTheDocument()
   })

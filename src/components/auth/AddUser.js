@@ -49,18 +49,16 @@ export class AddUser extends React.PureComponent {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="uri">Your Instance</label>
           <input
-            data-testid="add-uri-input"
+            id="uri"
             disabled={this.state.loading}
             value={this.state.instance}
             onChange={this.handleInputChange}
             placeholder="e.g. mastodon.social"
           />
           <div>We will use mastodon.social if you leave this blank.</div>
-          <button disabled={this.state.loading} data-testid="add-uri-button">
-            Log in
-          </button>
+          <button disabled={this.state.loading}>Login</button>
         </form>
-        {this.state.error && <div data-testid="input-error">Error!</div>}
+        {this.state.error && <div>Error!</div>}
       </div>
     )
   }

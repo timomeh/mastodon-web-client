@@ -1,14 +1,7 @@
 import 'jest-dom/extend-expect'
 import 'react-testing-library/cleanup-after-each'
 
-import fetch, { call } from './lib/mastodon/fetch-factory'
-
-// Fetch mock
-jest.mock('./lib/mastodon/fetch-factory')
-beforeEach(() => {
-  call.mockReset()
-  fetch.mockClear()
-})
+global.fetch = require('jest-fetch-mock')
 
 // Localstorage mock
 const localStorageMock = {
@@ -17,3 +10,7 @@ const localStorageMock = {
   clear: jest.fn()
 }
 global.localStorage = localStorageMock
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
