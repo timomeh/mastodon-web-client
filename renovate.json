@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "config:base",
+    "group:linters",
+    ":automergeMinor",
+    ":label(renovate)",
+    ":timezone(Europe/Berlin)"
+  ]
+}
