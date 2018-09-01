@@ -26,9 +26,9 @@ export class IndexRoute extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { uacct: setUacct } = ownProps.match.params
+  const { uacct: propsUacct } = ownProps.match.params
   const defaultUacct = state.users.uaccts[0]
-  const uacct = setUacct || defaultUacct
+  const uacct = propsUacct || defaultUacct
 
   return {
     uacct,

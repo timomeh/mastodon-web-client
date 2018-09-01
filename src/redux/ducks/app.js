@@ -1,7 +1,7 @@
 export const ADD_ENTITIES = 'app/ADD_ENTITIES'
 export const STORAGE_UPDATE = 'app/STORAGE_UPDATE'
-const SET_ACTIVE_URI = 'app/SET_ACTIVE_URI'
-const SET_ACTIVE_UACCT = 'app/SET_ACTIVE_UACCT'
+const SET_URI = 'app/SET_URI'
+const SET_UACCT = 'app/SET_UACCT'
 
 const initialState = {
   uri: null,
@@ -10,10 +10,10 @@ const initialState = {
 
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_ACTIVE_URI:
+    case SET_URI:
       return { ...state, uri: action.uri }
 
-    case SET_ACTIVE_UACCT:
+    case SET_UACCT:
       return { ...state, uacct: action.uacct }
 
     default:
@@ -21,13 +21,13 @@ export default function appReducer(state = initialState, action) {
   }
 }
 
-export const setActiveUri = uri => ({
-  type: SET_ACTIVE_URI,
+export const setUri = uri => ({
+  type: SET_URI,
   uri
 })
 
-export const setActiveUacct = uacct => ({
-  type: SET_ACTIVE_UACCT,
+export const setUacct = uacct => ({
+  type: SET_UACCT,
   uacct
 })
 
