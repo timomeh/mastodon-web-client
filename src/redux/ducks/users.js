@@ -47,7 +47,7 @@ export const fetchUserFromCode = ({ uri, code }) => dispatch => {
   return api({ uri })
     .user.token(code)
     .then(({ accessToken: token }) => {
-      return Promise.all([token, dispatch(fetchByToken({ uri, token }))])
+      return Promise.all([token, dispatch(fetchUser({ uri, token }))])
     })
     .then(([token, user]) => {
       dispatch([addUser(user.uacct), setToken(user.uacct, token)])
@@ -55,7 +55,7 @@ export const fetchUserFromCode = ({ uri, code }) => dispatch => {
     })
 }
 
-export const fetchByToken = ({ uri, token }) => dispatch => {
+export const fetchUser = ({ uri, token } = {}) => dispatch => {
   return api({ uri, token })
     .user.get()
     .then(({ result, entities }) => {

@@ -23,7 +23,7 @@ export const createClient = uri => (dispatch, getState) => {
   return api({ uri })
     .apps.create()
     .then(({ result, entities }) => {
-      dispatch([app.addEntities(entities), app.setActiveUri(result)])
+      dispatch(app.addEntities(entities))
       return entities[result]
     })
 }

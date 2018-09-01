@@ -13,7 +13,9 @@ export default function instancesReducer(state = initialState, action) {
   }
 }
 
-export const fetch = uri => dispatch => {
+export const fetchInstance = (uri, opts = {}) => (dispatch, getState) => {
+  if (opts.cache) return Promise.resolve(getState()[uri])
+
   return api({ uri })
     .instance.get()
     .then(({ result, entities }) => {
