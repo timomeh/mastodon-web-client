@@ -2,7 +2,12 @@
   "extends": [
     "config:base",
     "group:linters",
+    "group:emotionMonorepo",
+    "group:storybookMonorepo",
     ":automergeMinor",
+    ":automergeBranchPush",
+    ":prNotPending",
+    ":maintainLockFilesWeekly",
     ":label(renovate)",
     ":timezone(Europe/Berlin)"
   ]
