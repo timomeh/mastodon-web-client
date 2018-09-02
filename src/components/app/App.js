@@ -25,11 +25,11 @@ export default class App extends React.PureComponent {
   render() {
     return (
       <Provider store={store}>
-        <BrowserRouter>
-          <Theme>
+        <Theme>
+          <BrowserRouter>
             <Router />
-          </Theme>
-        </BrowserRouter>
+          </BrowserRouter>
+        </Theme>
       </Provider>
     )
   }

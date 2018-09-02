@@ -21,7 +21,9 @@ export class IndexRoute extends React.PureComponent {
       return !uacct ? <StartScreen /> : <NotFound />
     }
 
-    return <UserRoot uacct={uacct} baseUrl={baseUrl} />
+    return (
+      <UserRoot uacct={uacct} uri={uacct.split('@')[1]} baseUrl={baseUrl} />
+    )
   }
 }
 

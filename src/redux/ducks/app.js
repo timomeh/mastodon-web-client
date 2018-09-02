@@ -21,6 +21,10 @@ export default function appReducer(state = initialState, action) {
   }
 }
 
+export const setApp = ({ uri, uacct }) => dispatch => {
+  dispatch([setUri(uri), setUacct(uacct)])
+}
+
 export const setUri = uri => ({
   type: SET_URI,
   uri

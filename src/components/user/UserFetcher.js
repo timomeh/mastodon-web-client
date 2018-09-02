@@ -14,9 +14,6 @@ class UserFetcher extends React.PureComponent {
   static propTypes = {
     fetchUser: PropTypes.func.isRequired,
     fetchInstance: PropTypes.func.isRequired,
-    uacct: PropTypes.string.isRequired,
-    uri: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
     user: AccountPropTypes,
     instance: InstancePropTypes,
     children: PropTypes.node
@@ -41,9 +38,9 @@ class UserFetcher extends React.PureComponent {
   }
 
   callUser = () => {
-    const { fetchUser, uri, token } = this.props
+    const { fetchUser } = this.props
 
-    fetchUser({ uri, token })
+    fetchUser()
       .then(() => this.setState({ hasFetchedUser: true }))
       .catch(err => {
         console.error(err)
@@ -52,9 +49,9 @@ class UserFetcher extends React.PureComponent {
   }
 
   callInstance = () => {
-    const { fetchInstance, uri } = this.props
+    const { fetchInstance } = this.props
 
-    fetchInstance(uri)
+    fetchInstance()
       .then(() => this.setState({ hasFetchedInstance: true }))
       .catch(err => {
         console.error(err)
@@ -71,10 +68,9 @@ class UserFetcher extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, { uacct, uri }) => ({
-  token: state.users.tokens[uacct],
-  user: state.users.entities[uacct],
-  instance: state.instances[uri]
+const mapStateToProps = state => ({
+  user: state.users.entities[state.app.uacct],
+  instance: state.instances[state.app.uri]
 })
 
 export default connect(

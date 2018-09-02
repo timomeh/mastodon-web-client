@@ -4,9 +4,11 @@ import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose, withProps } from 'recompose'
 
-import { setUacct, setUri } from '../../redux/ducks/app'
+import { setApp } from '../../redux/ducks/app'
+
 import UserFetcher from './UserFetcher'
 import HomeTimeline from '../timeline/HomeTimeline'
+import TopBar from '../top-bar/TopBar'
 
 export class UserRoot extends React.PureComponent {
   static propTypes = {
@@ -16,34 +18,35 @@ export class UserRoot extends React.PureComponent {
     uri: PropTypes.string.isRequired
   }
 
-  componentDidMount() {
-    const { setApp, uri, uacct } = this.props
+  state = {
+    isPrepared: false
+  }
 
-    setApp({ uri, uacct })
+  componentDidMount() {
+    const { setApp, uacct, uri } = this.props
+    setApp({ uacct, uri })
+    this.setState({ isPrepared: true })
   }
 
   render() {
-    const { baseUrl, uacct, uri } = this.props
+    const { isPrepared } = this.state
+    const { baseUrl } = this.props
+
+    if (!isPrepared) return null
 
     return (
-      <div data-testid="user-root">
-        <UserFetcher uacct={uacct} uri={uri}>
-          <h1>{uacct}</h1>
-          <Route exact path={`${baseUrl}/`} component={HomeTimeline} />
-        </UserFetcher>
-      </div>
+      <UserFetcher>
+        <TopBar />
+        <Route exact path={`${baseUrl}/`} component={HomeTimeline} />
+      </UserFetcher>
     )
   }
 }
-
-const mapDispatchToProps = dispatch => ({
-  setApp: ({ uri, uacct }) => dispatch([setUacct(uacct), setUri(uri)])
-})
 
 export default compose(
   withProps(props => ({ uri: props.uacct.split('@')[1] })),
   connect(
     null,
-    mapDispatchToProps
+    { setApp }
   )
 )(UserRoot)
