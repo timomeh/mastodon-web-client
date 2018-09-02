@@ -39,3 +39,11 @@ describe('/:uacct', () => {
     await wait()
   })
 })
+
+describe('/this-route-does-not-exist', () => {
+  it('renders not found', () => {
+    const route = '/this-route-does-not-exist'
+    const { getByTestId } = renderWithReduxAndRouter(<Router />, { route })
+    expect(getByTestId('not-found-screen')).toBeInTheDocument()
+  })
+})
