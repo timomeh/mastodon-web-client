@@ -1,3 +1,4 @@
+import React from 'react'
 import { configure, addDecorator } from '@storybook/react'
 import { checkA11y } from '@storybook/addon-a11y'
 import backgrounds from '@storybook/addon-backgrounds'
@@ -13,7 +14,7 @@ setOptions({
 })
 addDecorator(backgrounds([{ name: 'page', value: '#FFFFFF', default: true }]))
 addDecorator(checkA11y)
-addDecorator(story => <Theme>{story}</Theme>)
+addDecorator(story => <Theme>{story()}</Theme>)
 
 const req = require.context('../src/components', true, /\.stories\.js$/)
 function loadStories() {
