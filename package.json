@@ -19,6 +19,7 @@
   "dependencies": {
     "@manaflair/redux-batch": "0.1.0",
     "emotion": "9.2.8",
+    "emotion-theming": "9.2.6",
     "humps": "2.0.1",
     "is-valid-domain": "0.0.5",
     "normalizr": "3.2.4",
