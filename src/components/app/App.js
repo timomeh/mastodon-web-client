@@ -8,6 +8,7 @@ import { setStore as setMastodonApiStore } from '../../lib/mastodon/api'
 import configureStore from '../../redux/configure-store'
 
 import Router from './Router'
+import Theme from './Theme'
 
 const store = configureStore()
 setMastodonApiStore(store)
@@ -25,7 +26,9 @@ export default class App extends React.PureComponent {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <Router />
+          <Theme>
+            <Router />
+          </Theme>
         </BrowserRouter>
       </Provider>
     )

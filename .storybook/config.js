@@ -4,6 +4,7 @@ import backgrounds from '@storybook/addon-backgrounds'
 import { setOptions } from '@storybook/addon-options'
 
 import '../src/global-styles'
+import Theme from '../src/components/app/Theme'
 
 setOptions({
   name: 'mastodon-web',
@@ -12,6 +13,7 @@ setOptions({
 })
 addDecorator(backgrounds([{ name: 'page', value: '#FFFFFF', default: true }]))
 addDecorator(checkA11y)
+addDecorator(story => <Theme>{story}</Theme>)
 
 const req = require.context('../src/components', true, /\.stories\.js$/)
 function loadStories() {
