@@ -9,6 +9,8 @@ import { AccountPropTypes, InstancePropTypes } from '../../lib/types'
 const UserFetcherContext = React.createContext()
 
 class UserFetcher extends React.PureComponent {
+  static Consumer = UserFetcherContext.Consumer
+
   static propTypes = {
     fetchUser: PropTypes.func.isRequired,
     fetchInstance: PropTypes.func.isRequired,
@@ -19,8 +21,6 @@ class UserFetcher extends React.PureComponent {
     instance: InstancePropTypes,
     children: PropTypes.node
   }
-
-  static Consumer = UserFetcherContext.Consumer
 
   constructor(props) {
     super(props)
