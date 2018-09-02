@@ -11,13 +11,12 @@ describe('/', () => {
     expect(getByTestId('start-screen')).toBeInTheDocument()
   })
 
-  it('renders root of first user with user in store', async () => {
+  it('renders root of first user with user in store', () => {
     const { getByTestId, getByText } = renderWithReduxAndRouter(<Router />, {
       initialState: { users: { uaccts: ['me@funk.town', 'hi@funk.town'] } }
     })
     expect(getByTestId('user-root')).toBeInTheDocument()
     expect(getByText('me@funk.town')).toBeInTheDocument()
-    await wait()
   })
 })
 
@@ -28,7 +27,7 @@ describe('/:uacct', () => {
     expect(getByTestId('not-found-screen')).toBeInTheDocument()
   })
 
-  it('renders root of user with user in store', async () => {
+  it('renders root of user with user in store', () => {
     const route = '/hi@funk.town'
     const { getByTestId, getByText } = renderWithReduxAndRouter(<Router />, {
       initialState: { users: { uaccts: ['me@funk.town', 'hi@funk.town'] } },
@@ -36,7 +35,6 @@ describe('/:uacct', () => {
     })
     expect(getByTestId('user-root')).toBeInTheDocument()
     expect(getByText('hi@funk.town')).toBeInTheDocument()
-    await wait()
   })
 })
 
