@@ -68,10 +68,5 @@
     {
       "path": "./build/static/js/*.js"
     }
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  }
+  ]
 }
