@@ -56,7 +56,7 @@
     "eslint-config-prettier": "3.0.1",
     "eslint-plugin-prettier": "2.6.2",
     "eslint-plugin-react": "7.11.1",
-    "husky": "1.0.0-rc.14",
+    "husky": "1.0.0-rc.15",
     "jest-dom": "1.12.1",
     "jest-fetch-mock": "1.6.6",
     "jest-junit": "5.1.0",
