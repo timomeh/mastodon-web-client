@@ -63,7 +63,7 @@
     "lint-staged": "7.3.0",
     "prettier": "1.14.3",
     "react-app-rewired": "1.6.2",
-    "react-testing-library": "5.1.0",
+    "react-testing-library": "5.1.1",
     "redux-devtools-extension": "2.13.5",
     "source-map-explorer": "1.6.0",
     "storybook-host": "5.0.1"
